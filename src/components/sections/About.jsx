@@ -32,11 +32,11 @@ const skills = [
 ];
 
 // Stats data
-const stats = [
-  { icon: <Briefcase />, value: 150, suffix: '+', label: 'Projects Done' },
-  { icon: <Users />, value: 50, suffix: '+', label: 'Happy Clients' },
-  { icon: <Award />, value: 15, suffix: '', label: 'Awards Won' },
-  { icon: <Coffee />, value: 999, suffix: '+', label: 'Coffees Drunk' },
+const statsData = [
+  { id: 0, icon: <Briefcase />, value: 150, suffix: '+', label: 'Projects Done' },
+  { id: 1, icon: <Users />, value: 50, suffix: '+', label: 'Happy Clients' },
+  { id: 2, icon: <Award />, value: 15, suffix: '', label: 'Awards Won' },
+  { id: 3, icon: <Coffee />, value: 999, suffix: '+', label: 'Coffees Drunk' },
 ];
 
 // Animated counter component
@@ -104,7 +104,7 @@ const ImageSlideshow = ({ images, interval = 2000 }) => {
       setTimeout(() => {
         setCurrentIndex((prev) => (prev + 1) % images.length);
         setIsAnimating(false);
-      }, 500); // Half of the transition time
+      }, 500);
     }, interval);
 
     return () => clearInterval(timer);
@@ -122,7 +122,6 @@ const ImageSlideshow = ({ images, interval = 2000 }) => {
           } ${isAnimating && index === currentIndex ? 'animating' : ''}`}
         />
       ))}
-      {/* Progress dots */}
       <div className="about__slideshow-dots">
         {images.map((_, index) => (
           <span
@@ -131,6 +130,62 @@ const ImageSlideshow = ({ images, interval = 2000 }) => {
           />
         ))}
       </div>
+    </div>
+  );
+};
+
+// Animated Stats Cards Component
+const AnimatedStatsCards = ({ stats }) => {
+  const [order, setOrder] = useState([0, 1, 2, 3]);
+  const [isSwapping, setIsSwapping] = useState(false);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsSwapping(true);
+
+      setTimeout(() => {
+        setOrder(prevOrder => {
+          // Shuffle the order
+          const newOrder = [...prevOrder];
+          // Rotate positions: move first to last
+          const first = newOrder.shift();
+          newOrder.push(first);
+          return newOrder;
+        });
+
+        setTimeout(() => {
+          setIsSwapping(false);
+        }, 600);
+      }, 400);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div ref={containerRef} className="about__stats">
+      {order.map((statIndex, position) => {
+        const stat = stats[statIndex];
+        return (
+          <div
+            key={stat.id}
+            className={`about__stat-card ${isSwapping ? 'swapping' : ''}`}
+            style={{
+              '--position': position,
+              zIndex: isSwapping ? 10 - position : 1
+            }}
+          >
+            <div className="about__stat-icon">{stat.icon}</div>
+            <AnimatedCounter
+              value={stat.value}
+              suffix={stat.suffix}
+              duration={2.5}
+            />
+            <span className="about__stat-label">{stat.label}</span>
+          </div>
+        );
+      })}
     </div>
   );
 };
@@ -268,20 +323,8 @@ const About = () => {
           </div>
         </div>
 
-        {/* Stats with animated counters */}
-        <div className="about__stats">
-          {stats.map((stat) => (
-            <div key={stat.label} className="about__stat-card">
-              <div className="about__stat-icon">{stat.icon}</div>
-              <AnimatedCounter
-                value={stat.value}
-                suffix={stat.suffix}
-                duration={2.5}
-              />
-              <span className="about__stat-label">{stat.label}</span>
-            </div>
-          ))}
-        </div>
+        {/* Stats with animated cards that swap positions */}
+        <AnimatedStatsCards stats={statsData} />
       </div>
     </section>
   );
