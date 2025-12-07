@@ -142,7 +142,7 @@ const AnimatedStatsCards = ({ stats }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setRotation(prev => prev + 90); // Rotate 90 degrees (360/4 cards)
-    }, 5000);
+    }, 3000); // Every 3 seconds
 
     return () => clearInterval(interval);
   }, []);
