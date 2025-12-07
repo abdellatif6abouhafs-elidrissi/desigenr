@@ -12,6 +12,15 @@ import './About.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Portfolio images for slideshow
+const portfolioImages = [
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=600&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=500&h=600&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&h=600&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&h=600&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&h=600&fit=crop&crop=face',
+];
+
 // Skills data
 const skills = [
   { name: 'Brand Identity', level: 95 },
@@ -80,6 +89,49 @@ const AnimatedCounter = ({ value, suffix, duration = 2 }) => {
     <span ref={counterRef} className="about__stat-number">
       {count}{suffix}
     </span>
+  );
+};
+
+// Image slideshow component
+const ImageSlideshow = ({ images, interval = 2000 }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIsAnimating(true);
+
+      setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % images.length);
+        setIsAnimating(false);
+      }, 500); // Half of the transition time
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [images.length, interval]);
+
+  return (
+    <div className="about__slideshow">
+      {images.map((src, index) => (
+        <img
+          key={index}
+          src={src}
+          alt={`Designer ${index + 1}`}
+          className={`about__slideshow-image ${
+            index === currentIndex ? 'active' : ''
+          } ${isAnimating && index === currentIndex ? 'animating' : ''}`}
+        />
+      ))}
+      {/* Progress dots */}
+      <div className="about__slideshow-dots">
+        {images.map((_, index) => (
+          <span
+            key={index}
+            className={`about__slideshow-dot ${index === currentIndex ? 'active' : ''}`}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 
@@ -158,10 +210,7 @@ const About = () => {
           <div ref={imageRef} className="about__image-container">
             <div className="about__image-wrapper">
               <div className="about__image">
-                <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=600&fit=crop&crop=face"
-                  alt="Designer Portrait"
-                />
+                <ImageSlideshow images={portfolioImages} interval={2000} />
               </div>
               <div className="about__image-decoration about__image-decoration--1"></div>
               <div className="about__image-decoration about__image-decoration--2"></div>
