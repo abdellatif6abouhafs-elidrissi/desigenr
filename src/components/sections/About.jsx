@@ -134,58 +134,48 @@ const ImageSlideshow = ({ images, interval = 2000 }) => {
   );
 };
 
-// Animated Stats Cards Component
+// Animated Stats Cards Component - Carousel Style
 const AnimatedStatsCards = ({ stats }) => {
-  const [order, setOrder] = useState([0, 1, 2, 3]);
-  const [isSwapping, setIsSwapping] = useState(false);
+  const [rotation, setRotation] = useState(0);
   const containerRef = useRef(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsSwapping(true);
-
-      setTimeout(() => {
-        setOrder(prevOrder => {
-          // Shuffle the order
-          const newOrder = [...prevOrder];
-          // Rotate positions: move first to last
-          const first = newOrder.shift();
-          newOrder.push(first);
-          return newOrder;
-        });
-
-        setTimeout(() => {
-          setIsSwapping(false);
-        }, 600);
-      }, 400);
+      setRotation(prev => prev + 90); // Rotate 90 degrees (360/4 cards)
     }, 5000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div ref={containerRef} className="about__stats">
-      {order.map((statIndex, position) => {
-        const stat = stats[statIndex];
-        return (
-          <div
-            key={stat.id}
-            className={`about__stat-card ${isSwapping ? 'swapping' : ''}`}
-            style={{
-              '--position': position,
-              zIndex: isSwapping ? 10 - position : 1
-            }}
-          >
-            <div className="about__stat-icon">{stat.icon}</div>
-            <AnimatedCounter
-              value={stat.value}
-              suffix={stat.suffix}
-              duration={2.5}
-            />
-            <span className="about__stat-label">{stat.label}</span>
-          </div>
-        );
-      })}
+    <div className="about__stats-wrapper">
+      <div
+        ref={containerRef}
+        className="about__stats-carousel"
+        style={{ '--rotation': `${rotation}deg` }}
+      >
+        {stats.map((stat, index) => {
+          const angle = (index * 90); // Each card at 90 degree intervals
+          return (
+            <div
+              key={stat.id}
+              className="about__stat-card"
+              style={{
+                '--angle': `${angle}deg`,
+                '--index': index
+              }}
+            >
+              <div className="about__stat-icon">{stat.icon}</div>
+              <AnimatedCounter
+                value={stat.value}
+                suffix={stat.suffix}
+                duration={2.5}
+              />
+              <span className="about__stat-label">{stat.label}</span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
