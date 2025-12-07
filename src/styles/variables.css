@@ -1,0 +1,142 @@
+/* ===========================================
+   DESIGN SYSTEM VARIABLES
+   Premium Creative Portfolio
+   =========================================== */
+
+:root {
+  /* Primary Colors - Deep Purple to Pink Gradient */
+  --color-primary: #6C63FF;
+  --color-primary-dark: #5a52d9;
+  --color-primary-light: #8b85ff;
+
+  /* Accent Colors */
+  --color-accent: #FF6B9D;
+  --color-accent-dark: #e55a87;
+  --color-accent-light: #ff8bb5;
+
+  /* Neutral Colors */
+  --color-dark: #0a0a0f;
+  --color-dark-secondary: #12121a;
+  --color-dark-tertiary: #1a1a25;
+  --color-gray-900: #1f1f2e;
+  --color-gray-800: #2d2d3f;
+  --color-gray-700: #3d3d52;
+  --color-gray-600: #5a5a72;
+  --color-gray-500: #7a7a92;
+  --color-gray-400: #9a9ab0;
+  --color-gray-300: #b8b8c8;
+  --color-gray-200: #d5d5e0;
+  --color-gray-100: #ebebf0;
+  --color-white: #ffffff;
+
+  /* Gradient Definitions */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  --gradient-dark: linear-gradient(180deg, var(--color-dark) 0%, var(--color-dark-secondary) 100%);
+  --gradient-card: linear-gradient(145deg, rgba(108, 99, 255, 0.1) 0%, rgba(255, 107, 157, 0.1) 100%);
+  --gradient-text: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
+
+  /* Typography */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+  --text-7xl: 4.5rem;
+  --text-8xl: 6rem;
+
+  /* Font Weights */
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  /* Letter Spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-glow: 0 0 40px rgba(108, 99, 255, 0.3);
+  --shadow-glow-accent: 0 0 40px rgba(255, 107, 157, 0.3);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 500ms ease;
+  --transition-slower: 700ms ease;
+
+  /* Z-Index Scale */
+  --z-negative: -1;
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-tooltip: 60;
+
+  /* Container */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+}
+
+/* Dark theme adjustments */
+[data-theme="light"] {
+  --color-dark: #ffffff;
+  --color-dark-secondary: #f8f8fc;
+  --color-dark-tertiary: #f0f0f5;
+  --color-white: #0a0a0f;
+}

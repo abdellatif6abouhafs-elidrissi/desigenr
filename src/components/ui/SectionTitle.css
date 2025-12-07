@@ -1,0 +1,61 @@
+/* ===========================================
+   Section Title Styles
+   =========================================== */
+
+.section-title {
+  margin-bottom: var(--space-16);
+}
+
+.section-title--center {
+  text-align: center;
+}
+
+.section-title--left {
+  text-align: left;
+}
+
+.section-title--right {
+  text-align: right;
+}
+
+.section-title__heading {
+  font-size: clamp(2rem, 5vw, var(--text-5xl));
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-4);
+  letter-spacing: var(--tracking-tight);
+}
+
+.section-title__line {
+  width: 80px;
+  height: 4px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-6);
+  transform-origin: left center;
+}
+
+.section-title--center .section-title__line {
+  margin-left: auto;
+  margin-right: auto;
+  transform-origin: center center;
+}
+
+.section-title--right .section-title__line {
+  margin-left: auto;
+  transform-origin: right center;
+}
+
+.section-title__subtitle {
+  font-size: var(--text-lg);
+  color: var(--color-gray-400);
+  max-width: 600px;
+  line-height: var(--leading-relaxed);
+}
+
+.section-title--center .section-title__subtitle {
+  margin: 0 auto;
+}
+
+.section-title--right .section-title__subtitle {
+  margin-left: auto;
+}

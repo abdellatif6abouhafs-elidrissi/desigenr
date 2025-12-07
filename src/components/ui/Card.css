@@ -1,0 +1,103 @@
+/* ===========================================
+   Card Styles
+   =========================================== */
+
+.card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.card--default {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+}
+
+.card--glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.card--gradient {
+  background: var(--gradient-card);
+}
+
+.card__content {
+  position: relative;
+  z-index: 2;
+  padding: var(--space-6);
+}
+
+/* Animated Border */
+.card__border {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xl);
+  padding: 1px;
+  background: linear-gradient(
+    145deg,
+    rgba(108, 99, 255, 0.3),
+    rgba(255, 107, 157, 0.1),
+    transparent
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+}
+
+.card--hover:hover .card__border {
+  background: linear-gradient(
+    145deg,
+    rgba(108, 99, 255, 0.6),
+    rgba(255, 107, 157, 0.4),
+    rgba(108, 99, 255, 0.2)
+  );
+}
+
+/* Glow Effect */
+.card__glow {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(
+    circle,
+    rgba(108, 99, 255, 0.3) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+  z-index: 1;
+  filter: blur(30px);
+}
+
+.card--hover:hover .card__glow {
+  opacity: 1;
+}
+
+/* Card Hover State */
+.card--hover {
+  cursor: pointer;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.card--hover:hover {
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 60px rgba(108, 99, 255, 0.1);
+}
