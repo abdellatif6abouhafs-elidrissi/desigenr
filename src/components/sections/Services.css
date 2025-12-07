@@ -54,6 +54,56 @@
 /* Card Wrapper */
 .services__card-wrapper {
   position: relative;
+  perspective: 1000px;
+}
+
+/* Example Images Behind Card */
+.services__examples {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+}
+
+.services__examples.active {
+  opacity: 1;
+  transform: translateY(-30px) scale(1.02);
+}
+
+.services__example-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1.1);
+  transition: all 0.6s ease;
+}
+
+.services__example-img.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.services__example-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 15, 0.3) 0%,
+    rgba(10, 10, 15, 0.8) 100%
+  );
 }
 
 /* Card */
@@ -61,11 +111,13 @@
   position: relative;
   height: 100%;
   padding: var(--space-8) !important;
-  transition: all var(--transition-base);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
 }
 
-.services__card:hover {
+.services__card-wrapper:hover .services__card {
   transform: translateY(-10px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
 }
 
 /* Icon */
@@ -87,7 +139,7 @@
   height: 32px;
 }
 
-.services__card:hover .services__icon {
+.services__card-wrapper:hover .services__icon {
   transform: scale(1.1) rotate(5deg);
 }
 
@@ -101,7 +153,7 @@
   transition: color var(--transition-base);
 }
 
-.services__card:hover .services__title {
+.services__card-wrapper:hover .services__title {
   background: var(--gradient-text);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -178,7 +230,7 @@
   transition: color var(--transition-base);
 }
 
-.services__card:hover .services__number {
+.services__card-wrapper:hover .services__number {
   color: rgba(108, 99, 255, 0.1);
 }
 
