@@ -3,7 +3,7 @@
    Designer bio and animated skills
    =========================================== */
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Award, Coffee, Users, Briefcase } from 'lucide-react';
@@ -24,11 +24,64 @@ const skills = [
 
 // Stats data
 const stats = [
-  { icon: <Briefcase />, number: '150+', label: 'Projects Done' },
-  { icon: <Users />, number: '50+', label: 'Happy Clients' },
-  { icon: <Award />, number: '15', label: 'Awards Won' },
-  { icon: <Coffee />, number: '999+', label: 'Coffees Drunk' },
+  { icon: <Briefcase />, value: 150, suffix: '+', label: 'Projects Done' },
+  { icon: <Users />, value: 50, suffix: '+', label: 'Happy Clients' },
+  { icon: <Award />, value: 15, suffix: '', label: 'Awards Won' },
+  { icon: <Coffee />, value: 999, suffix: '+', label: 'Coffees Drunk' },
 ];
+
+// Animated counter component
+const AnimatedCounter = ({ value, suffix, duration = 2 }) => {
+  const [count, setCount] = useState(0);
+  const counterRef = useRef(null);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated.current) {
+            hasAnimated.current = true;
+
+            const startTime = Date.now();
+            const endValue = value;
+            const animDuration = duration * 1000;
+
+            const updateCounter = () => {
+              const now = Date.now();
+              const progress = Math.min((now - startTime) / animDuration, 1);
+              const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+              const currentValue = Math.floor(easeOutQuart * endValue);
+
+              setCount(currentValue);
+
+              if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+              } else {
+                setCount(endValue);
+              }
+            };
+
+            requestAnimationFrame(updateCounter);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    if (counterRef.current) {
+      observer.observe(counterRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [value, duration]);
+
+  return (
+    <span ref={counterRef} className="about__stat-number">
+      {count}{suffix}
+    </span>
+  );
+};
 
 const About = () => {
   const sectionRef = useRef(null);
@@ -166,12 +219,16 @@ const About = () => {
           </div>
         </div>
 
-        {/* Stats */}
+        {/* Stats with animated counters */}
         <div className="about__stats">
           {stats.map((stat) => (
             <div key={stat.label} className="about__stat-card">
               <div className="about__stat-icon">{stat.icon}</div>
-              <span className="about__stat-number">{stat.number}</span>
+              <AnimatedCounter
+                value={stat.value}
+                suffix={stat.suffix}
+                duration={2.5}
+              />
               <span className="about__stat-label">{stat.label}</span>
             </div>
           ))}

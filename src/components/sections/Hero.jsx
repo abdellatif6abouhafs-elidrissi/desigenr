@@ -3,12 +3,78 @@
    Animated hero with 3D background
    =========================================== */
 
-import { useRef, useEffect, Suspense } from 'react';
+import { useRef, useEffect, useState, Suspense } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight, Play, Sparkles } from 'lucide-react';
 import Button from '../ui/Button';
 import FloatingShape from '../3d/FloatingShape';
 import './Hero.css';
+
+gsap.registerPlugin(ScrollTrigger);
+
+// Stats data
+const statsData = [
+  { value: 150, suffix: '+', label: 'Projects Completed' },
+  { value: 50, suffix: '+', label: 'Happy Clients' },
+  { value: 8, suffix: '+', label: 'Years Experience' }
+];
+
+// Counter component with animation
+const AnimatedCounter = ({ value, suffix, duration = 2 }) => {
+  const [count, setCount] = useState(0);
+  const counterRef = useRef(null);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated.current) {
+            hasAnimated.current = true;
+
+            // Animate the counter
+            const startTime = Date.now();
+            const endValue = value;
+            const animDuration = duration * 1000;
+
+            const updateCounter = () => {
+              const now = Date.now();
+              const progress = Math.min((now - startTime) / animDuration, 1);
+
+              // Easing function (ease out)
+              const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+              const currentValue = Math.floor(easeOutQuart * endValue);
+
+              setCount(currentValue);
+
+              if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+              } else {
+                setCount(endValue);
+              }
+            };
+
+            requestAnimationFrame(updateCounter);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    if (counterRef.current) {
+      observer.observe(counterRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [value, duration]);
+
+  return (
+    <span ref={counterRef} className="hero__stat-number">
+      {count}{suffix}
+    </span>
+  );
+};
 
 const Hero = () => {
   const heroRef = useRef(null);
@@ -16,6 +82,7 @@ const Hero = () => {
   const subtitleRef = useRef(null);
   const ctaRef = useRef(null);
   const scrollIndicatorRef = useRef(null);
+  const statsRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -49,6 +116,15 @@ const Hero = () => {
         duration: 0.5,
         ease: 'power3.out'
       }, '-=0.3');
+
+      // Animate stats container
+      tl.from(statsRef.current?.children, {
+        y: 30,
+        opacity: 0,
+        stagger: 0.15,
+        duration: 0.6,
+        ease: 'power3.out'
+      }, '-=0.2');
 
       // Animate scroll indicator
       tl.from(scrollIndicatorRef.current, {
@@ -143,20 +219,18 @@ const Hero = () => {
             </Button>
           </div>
 
-          {/* Stats */}
-          <div className="hero__stats">
-            <div className="hero__stat">
-              <span className="hero__stat-number">150+</span>
-              <span className="hero__stat-label">Projects Completed</span>
-            </div>
-            <div className="hero__stat">
-              <span className="hero__stat-number">50+</span>
-              <span className="hero__stat-label">Happy Clients</span>
-            </div>
-            <div className="hero__stat">
-              <span className="hero__stat-number">8+</span>
-              <span className="hero__stat-label">Years Experience</span>
-            </div>
+          {/* Stats with animated counters */}
+          <div ref={statsRef} className="hero__stats">
+            {statsData.map((stat) => (
+              <div key={stat.label} className="hero__stat">
+                <AnimatedCounter
+                  value={stat.value}
+                  suffix={stat.suffix}
+                  duration={2.5}
+                />
+                <span className="hero__stat-label">{stat.label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
