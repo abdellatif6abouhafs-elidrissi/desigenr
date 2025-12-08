@@ -1,9 +1,10 @@
 /* ===========================================
    App Component
-   Main application entry point
+   Main application entry point with routing
    =========================================== */
 
 import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -11,21 +12,27 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
-// Sections
-import {
-  Hero,
-  About,
-  Services,
-  Portfolio,
-  Testimonials,
-  Contact
-} from './components/sections';
+// Pages
+import Home from './pages/Home';
+import AllProjects from './pages/AllProjects';
 
 // Styles
 import './styles/global.css';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
+
+// Scroll to top on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    ScrollTrigger.refresh();
+  }, [pathname]);
+
+  return null;
+};
 
 function App() {
   useEffect(() => {
@@ -39,26 +46,29 @@ function App() {
   }, []);
 
   return (
-    <div className="app">
-      {/* Noise Overlay */}
-      <div className="noise-overlay" />
+    <Router>
+      <div className="app">
+        {/* Noise Overlay */}
+        <div className="noise-overlay" />
 
-      {/* Navigation */}
-      <Navbar />
+        {/* Scroll to top on route change */}
+        <ScrollToTop />
 
-      {/* Main Content */}
-      <main>
-        <Hero />
-        <About />
-        <Services />
-        <Portfolio />
-        <Testimonials />
-        <Contact />
-      </main>
+        {/* Navigation */}
+        <Navbar />
 
-      {/* Footer */}
-      <Footer />
-    </div>
+        {/* Main Content */}
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/projects" element={<AllProjects />} />
+          </Routes>
+        </main>
+
+        {/* Footer */}
+        <Footer />
+      </div>
+    </Router>
   );
 }
 

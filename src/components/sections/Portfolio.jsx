@@ -4,11 +4,12 @@
    =========================================== */
 
 import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, EffectCoverflow } from 'swiper/modules';
-import { X, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ExternalLink, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import SectionTitle from '../ui/SectionTitle';
 import Button from '../ui/Button';
 import 'swiper/css';
@@ -243,9 +244,11 @@ const Portfolio = () => {
 
         {/* View All Button */}
         <div className="portfolio__cta">
-          <Button variant="secondary" size="lg">
-            View All Projects
-          </Button>
+          <Link to="/projects">
+            <Button variant="secondary" size="lg" icon={<ArrowRight size={20} />}>
+              View All Projects
+            </Button>
+          </Link>
         </div>
       </div>
 
