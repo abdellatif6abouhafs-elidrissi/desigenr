@@ -17,7 +17,8 @@ import {
   Instagram,
   Twitter,
   Linkedin,
-  Dribbble
+  Dribbble,
+  Loader2
 } from 'lucide-react';
 import SectionTitle from '../ui/SectionTitle';
 import Button from '../ui/Button';
@@ -26,14 +27,9 @@ import './Contact.css';
 gsap.registerPlugin(ScrollTrigger);
 
 // EmailJS Configuration
-// To set up EmailJS:
-// 1. Go to https://www.emailjs.com/ and create a free account
-// 2. Add an email service (Gmail, Outlook, etc.)
-// 3. Create an email template with variables: {{from_name}}, {{from_email}}, {{subject}}, {{message}}
-// 4. Replace the values below with your actual IDs
-const EMAILJS_SERVICE_ID = 'service_portfolio'; // Replace with your service ID
-const EMAILJS_TEMPLATE_ID = 'template_contact'; // Replace with your template ID
-const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY'; // Replace with your public key
+const EMAILJS_SERVICE_ID = 'service_6izrbyg';
+const EMAILJS_TEMPLATE_ID = 'template_3q7v1ve';
+const EMAILJS_PUBLIC_KEY = 'gHMkjU3VqkT1916z3';
 
 // Contact info
 const contactInfo = [
@@ -57,7 +53,7 @@ const contactInfo = [
   }
 ];
 
-// Social links - open in new tab
+// Social links
 const socialLinks = [
   { icon: <Instagram />, label: 'Instagram', href: 'https://instagram.com' },
   { icon: <Twitter />, label: 'Twitter', href: 'https://twitter.com' },
@@ -67,13 +63,14 @@ const socialLinks = [
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    from_name: '',
+    from_email: '',
     subject: '',
     message: ''
   });
+  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
+  const [submitStatus, setSubmitStatus] = useState(null);
   const [focusedField, setFocusedField] = useState(null);
 
   const sectionRef = useRef(null);
@@ -82,9 +79,14 @@ const Contact = () => {
   const infoRef = useRef(null);
   const statusRef = useRef(null);
 
+  // Initialize EmailJS
+  useEffect(() => {
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+  }, []);
+
+  // Animations
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Form animation
       gsap.from(formRef.current, {
         scrollTrigger: {
           trigger: formRef.current,
@@ -97,7 +99,6 @@ const Contact = () => {
         ease: 'power3.out'
       });
 
-      // Info animation
       gsap.from(infoRef.current?.children, {
         scrollTrigger: {
           trigger: infoRef.current,
@@ -115,26 +116,63 @@ const Contact = () => {
     return () => ctx.revert();
   }, []);
 
+  // Validate form
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.from_name.trim()) {
+      newErrors.from_name = 'Name is required';
+    }
+
+    if (!formData.from_email.trim()) {
+      newErrors.from_email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.from_email)) {
+      newErrors.from_email = 'Please enter a valid email';
+    }
+
+    if (!formData.subject.trim()) {
+      newErrors.subject = 'Subject is required';
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required';
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = 'Message must be at least 10 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
-  // Handle form submit with EmailJS
+  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus(null);
 
     try {
-      // Send email using EmailJS
-      await emailjs.send(
+      const result = await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         {
-          from_name: formData.name,
-          from_email: formData.email,
+          from_name: formData.from_name,
+          from_email: formData.from_email,
           subject: formData.subject,
           message: formData.message,
           to_email: 'alleabdo301@gmail.com'
@@ -142,34 +180,43 @@ const Contact = () => {
         EMAILJS_PUBLIC_KEY
       );
 
+      console.log('Email sent successfully:', result);
       setSubmitStatus('success');
 
       // Success animation
-      gsap.fromTo(statusRef.current,
-        { scale: 0, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' }
-      );
+      setTimeout(() => {
+        if (statusRef.current) {
+          gsap.fromTo(statusRef.current,
+            { scale: 0.8, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' }
+          );
+        }
+      }, 100);
 
       // Reset form after delay
       setTimeout(() => {
         setSubmitStatus(null);
-        setFormData({ name: '', email: '', subject: '', message: '' });
-      }, 4000);
+        setFormData({ from_name: '', from_email: '', subject: '', message: '' });
+      }, 5000);
 
     } catch (error) {
       console.error('EmailJS Error:', error);
       setSubmitStatus('error');
 
       // Error animation
-      gsap.fromTo(statusRef.current,
-        { scale: 0, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' }
-      );
+      setTimeout(() => {
+        if (statusRef.current) {
+          gsap.fromTo(statusRef.current,
+            { scale: 0.8, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' }
+          );
+        }
+      }, 100);
 
       // Reset error after delay
       setTimeout(() => {
         setSubmitStatus(null);
-      }, 4000);
+      }, 5000);
     }
 
     setIsSubmitting(false);
@@ -192,42 +239,54 @@ const Contact = () => {
           {/* Form */}
           <div ref={formRef} className="contact__form-container">
             {submitStatus === null ? (
-              <form ref={formElementRef} className="contact__form" onSubmit={handleSubmit}>
+              <form
+                ref={formElementRef}
+                className="contact__form"
+                onSubmit={handleSubmit}
+                noValidate
+              >
                 <div className="contact__form-row">
-                  <div className={`contact__input-group ${focusedField === 'name' ? 'focused' : ''}`}>
-                    <label htmlFor="name" className="contact__label">Your Name</label>
+                  {/* Name Field */}
+                  <div className={`contact__input-group ${focusedField === 'from_name' ? 'focused' : ''} ${errors.from_name ? 'error' : ''}`}>
+                    <label htmlFor="from_name" className="contact__label">Your Name</label>
                     <input
                       type="text"
-                      id="name"
-                      name="name"
+                      id="from_name"
+                      name="from_name"
                       className="contact__input"
-                      value={formData.name}
+                      value={formData.from_name}
                       onChange={handleChange}
-                      onFocus={() => setFocusedField('name')}
+                      onFocus={() => setFocusedField('from_name')}
                       onBlur={() => setFocusedField(null)}
-                      required
+                      placeholder="John Doe"
+                      disabled={isSubmitting}
                     />
                     <span className="contact__input-border"></span>
+                    {errors.from_name && <span className="contact__error">{errors.from_name}</span>}
                   </div>
 
-                  <div className={`contact__input-group ${focusedField === 'email' ? 'focused' : ''}`}>
-                    <label htmlFor="email" className="contact__label">Your Email</label>
+                  {/* Email Field */}
+                  <div className={`contact__input-group ${focusedField === 'from_email' ? 'focused' : ''} ${errors.from_email ? 'error' : ''}`}>
+                    <label htmlFor="from_email" className="contact__label">Your Email</label>
                     <input
                       type="email"
-                      id="email"
-                      name="email"
+                      id="from_email"
+                      name="from_email"
                       className="contact__input"
-                      value={formData.email}
+                      value={formData.from_email}
                       onChange={handleChange}
-                      onFocus={() => setFocusedField('email')}
+                      onFocus={() => setFocusedField('from_email')}
                       onBlur={() => setFocusedField(null)}
-                      required
+                      placeholder="john@example.com"
+                      disabled={isSubmitting}
                     />
                     <span className="contact__input-border"></span>
+                    {errors.from_email && <span className="contact__error">{errors.from_email}</span>}
                   </div>
                 </div>
 
-                <div className={`contact__input-group ${focusedField === 'subject' ? 'focused' : ''}`}>
+                {/* Subject Field */}
+                <div className={`contact__input-group ${focusedField === 'subject' ? 'focused' : ''} ${errors.subject ? 'error' : ''}`}>
                   <label htmlFor="subject" className="contact__label">Subject</label>
                   <input
                     type="text"
@@ -238,12 +297,15 @@ const Contact = () => {
                     onChange={handleChange}
                     onFocus={() => setFocusedField('subject')}
                     onBlur={() => setFocusedField(null)}
-                    required
+                    placeholder="Project Inquiry"
+                    disabled={isSubmitting}
                   />
                   <span className="contact__input-border"></span>
+                  {errors.subject && <span className="contact__error">{errors.subject}</span>}
                 </div>
 
-                <div className={`contact__input-group ${focusedField === 'message' ? 'focused' : ''}`}>
+                {/* Message Field */}
+                <div className={`contact__input-group ${focusedField === 'message' ? 'focused' : ''} ${errors.message ? 'error' : ''}`}>
                   <label htmlFor="message" className="contact__label">Your Message</label>
                   <textarea
                     id="message"
@@ -254,16 +316,19 @@ const Contact = () => {
                     onChange={handleChange}
                     onFocus={() => setFocusedField('message')}
                     onBlur={() => setFocusedField(null)}
-                    required
+                    placeholder="Tell me about your project..."
+                    disabled={isSubmitting}
                   ></textarea>
                   <span className="contact__input-border"></span>
+                  {errors.message && <span className="contact__error">{errors.message}</span>}
                 </div>
 
+                {/* Submit Button */}
                 <Button
                   type="submit"
                   variant="primary"
                   size="lg"
-                  icon={<Send size={18} />}
+                  icon={isSubmitting ? <Loader2 size={18} className="spinning" /> : <Send size={18} />}
                   className={isSubmitting ? 'submitting' : ''}
                   disabled={isSubmitting}
                 >

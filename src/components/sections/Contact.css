@@ -123,6 +123,42 @@
   width: 100%;
 }
 
+/* Error State */
+.contact__input-group.error .contact__input {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.contact__input-group.error .contact__label {
+  color: #ef4444;
+}
+
+.contact__input-group.error .contact__input-border {
+  width: 100%;
+  background: #ef4444;
+}
+
+.contact__error {
+  display: block;
+  font-size: var(--text-xs);
+  color: #ef4444;
+  margin-top: var(--space-1);
+}
+
+/* Loading Spinner */
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Submit Button */
 .contact__form .btn {
   align-self: flex-start;
