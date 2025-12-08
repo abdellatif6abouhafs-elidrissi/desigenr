@@ -153,14 +153,14 @@ const Footer = () => {
           <div className="footer__column">
             <h4 className="footer__title">Get In Touch</h4>
             <div className="footer__contact">
-              <a href="mailto:hello@designer.com" className="footer__contact-item">
-                hello@designer.com
+              <a href="mailto:alleabdo301@gmail.com" className="footer__contact-item">
+                alleabdo301@gmail.com
               </a>
-              <a href="tel:+15551234567" className="footer__contact-item">
-                +1 (555) 123-4567
+              <a href="tel:+212625034547" className="footer__contact-item">
+                +212 625 034 547
               </a>
               <span className="footer__contact-item">
-                San Francisco, CA
+                Morocco
               </span>
             </div>
           </div>

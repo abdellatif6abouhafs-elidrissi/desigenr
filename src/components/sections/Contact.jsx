@@ -1,9 +1,10 @@
 /* ===========================================
    Contact Section Component
-   Contact form with animations
+   Contact form with EmailJS integration
    =========================================== */
 
 import { useState, useRef, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
@@ -12,6 +13,7 @@ import {
   MapPin,
   Send,
   CheckCircle,
+  AlertCircle,
   Instagram,
   Twitter,
   Linkedin,
@@ -23,24 +25,34 @@ import './Contact.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// EmailJS Configuration
+// To set up EmailJS:
+// 1. Go to https://www.emailjs.com/ and create a free account
+// 2. Add an email service (Gmail, Outlook, etc.)
+// 3. Create an email template with variables: {{from_name}}, {{from_email}}, {{subject}}, {{message}}
+// 4. Replace the values below with your actual IDs
+const EMAILJS_SERVICE_ID = 'service_portfolio'; // Replace with your service ID
+const EMAILJS_TEMPLATE_ID = 'template_contact'; // Replace with your template ID
+const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY'; // Replace with your public key
+
 // Contact info
 const contactInfo = [
   {
     icon: <Mail />,
     label: 'Email',
-    value: 'hello@designer.com',
-    href: 'mailto:hello@designer.com'
+    value: 'alleabdo301@gmail.com',
+    href: 'mailto:alleabdo301@gmail.com'
   },
   {
     icon: <Phone />,
     label: 'Phone',
-    value: '+1 (555) 123-4567',
-    href: 'tel:+15551234567'
+    value: '+212 625 034 547',
+    href: 'tel:+212625034547'
   },
   {
     icon: <MapPin />,
     label: 'Location',
-    value: 'San Francisco, CA',
+    value: 'Morocco',
     href: '#'
   }
 ];
@@ -61,13 +73,14 @@ const Contact = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
   const [focusedField, setFocusedField] = useState(null);
 
   const sectionRef = useRef(null);
   const formRef = useRef(null);
+  const formElementRef = useRef(null);
   const infoRef = useRef(null);
-  const successRef = useRef(null);
+  const statusRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -108,28 +121,58 @@ const Contact = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Handle form submit
+  // Handle form submit with EmailJS
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitStatus(null);
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      // Send email using EmailJS
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          to_email: 'alleabdo301@gmail.com'
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+
+      setSubmitStatus('success');
+
+      // Success animation
+      gsap.fromTo(statusRef.current,
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' }
+      );
+
+      // Reset form after delay
+      setTimeout(() => {
+        setSubmitStatus(null);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      }, 4000);
+
+    } catch (error) {
+      console.error('EmailJS Error:', error);
+      setSubmitStatus('error');
+
+      // Error animation
+      gsap.fromTo(statusRef.current,
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' }
+      );
+
+      // Reset error after delay
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 4000);
+    }
 
     setIsSubmitting(false);
-    setIsSubmitted(true);
-
-    // Success animation
-    gsap.fromTo(successRef.current,
-      { scale: 0, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' }
-    );
-
-    // Reset after delay
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 3000);
   };
 
   return (
@@ -148,8 +191,8 @@ const Contact = () => {
         <div className="contact__wrapper">
           {/* Form */}
           <div ref={formRef} className="contact__form-container">
-            {!isSubmitted ? (
-              <form className="contact__form" onSubmit={handleSubmit}>
+            {submitStatus === null ? (
+              <form ref={formElementRef} className="contact__form" onSubmit={handleSubmit}>
                 <div className="contact__form-row">
                   <div className={`contact__input-group ${focusedField === 'name' ? 'focused' : ''}`}>
                     <label htmlFor="name" className="contact__label">Your Name</label>
@@ -228,13 +271,21 @@ const Contact = () => {
                 </Button>
               </form>
             ) : (
-              <div ref={successRef} className="contact__success">
-                <div className="contact__success-icon">
-                  <CheckCircle size={64} />
+              <div ref={statusRef} className={`contact__status contact__status--${submitStatus}`}>
+                <div className="contact__status-icon">
+                  {submitStatus === 'success' ? (
+                    <CheckCircle size={64} />
+                  ) : (
+                    <AlertCircle size={64} />
+                  )}
                 </div>
-                <h3 className="contact__success-title">Message Sent!</h3>
-                <p className="contact__success-text">
-                  Thank you for reaching out. I'll get back to you as soon as possible.
+                <h3 className="contact__status-title">
+                  {submitStatus === 'success' ? 'Message Sent!' : 'Oops! Something went wrong'}
+                </h3>
+                <p className="contact__status-text">
+                  {submitStatus === 'success'
+                    ? "Thank you for reaching out. I'll get back to you as soon as possible."
+                    : "Please try again or contact me directly via email."}
                 </p>
               </div>
             )}
