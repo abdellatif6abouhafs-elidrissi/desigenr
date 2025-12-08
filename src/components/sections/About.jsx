@@ -6,7 +6,7 @@
 import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Award, Coffee, Users, Briefcase } from 'lucide-react';
+import { Award, Coffee, Users, Briefcase, Heart, Star } from 'lucide-react';
 import SectionTitle from '../ui/SectionTitle';
 import './About.css';
 
@@ -31,12 +31,14 @@ const skills = [
   { name: 'Typography', level: 92 },
 ];
 
-// Stats data
+// Stats data - 6 items for hexagonal carousel
 const statsData = [
   { id: 0, icon: <Briefcase />, value: 150, suffix: '+', label: 'Projects Done' },
   { id: 1, icon: <Users />, value: 50, suffix: '+', label: 'Happy Clients' },
   { id: 2, icon: <Award />, value: 15, suffix: '', label: 'Awards Won' },
   { id: 3, icon: <Coffee />, value: 999, suffix: '+', label: 'Coffees Drunk' },
+  { id: 4, icon: <Heart />, value: 100, suffix: '%', label: 'Satisfaction' },
+  { id: 5, icon: <Star />, value: 5, suffix: '★', label: 'Rating' },
 ];
 
 // Animated counter component
@@ -134,47 +136,54 @@ const ImageSlideshow = ({ images, interval = 2000 }) => {
   );
 };
 
-// Animated Stats Cards Component - Carousel Style
+// Animated Stats Cards Component - 3D Rotating Carousel (like Skills)
 const AnimatedStatsCards = ({ stats }) => {
   const [rotation, setRotation] = useState(0);
-  const containerRef = useRef(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setRotation(prev => prev + 90); // Rotate 90 degrees (360/4 cards)
-    }, 3000); // Every 3 seconds
+      setRotation(prev => prev + 0.5);
+    }, 30);
 
     return () => clearInterval(interval);
   }, []);
 
+  const radius = 300;
+
   return (
-    <div className="about__stats-wrapper">
+    <div className="about__stats-carousel-wrapper">
       <div
-        ref={containerRef}
         className="about__stats-carousel"
-        style={{ '--rotation': `${rotation}deg` }}
+        style={{
+          transform: `rotateY(${rotation}deg)`,
+        }}
       >
         {stats.map((stat, index) => {
-          const angle = (index * 90); // Each card at 90 degree intervals
+          const angle = (360 / stats.length) * index;
+
           return (
             <div
               key={stat.id}
-              className="about__stat-card"
+              className="about__stats-carousel-card"
               style={{
-                '--angle': `${angle}deg`,
-                '--index': index
+                transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
               }}
             >
-              <div className="about__stat-icon">{stat.icon}</div>
-              <AnimatedCounter
-                value={stat.value}
-                suffix={stat.suffix}
-                duration={2.5}
-              />
-              <span className="about__stat-label">{stat.label}</span>
+              <div className="about__stats-carousel-inner">
+                <div className="about__stat-icon">{stat.icon}</div>
+                <AnimatedCounter
+                  value={stat.value}
+                  suffix={stat.suffix}
+                  duration={2.5}
+                />
+                <span className="about__stat-label">{stat.label}</span>
+              </div>
             </div>
           );
         })}
+
+        {/* Center glow effect */}
+        <div className="about__stats-carousel-glow"></div>
       </div>
     </div>
   );
