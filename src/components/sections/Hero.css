@@ -129,13 +129,24 @@
 .hero__title-char {
   display: inline-block;
   will-change: transform, opacity;
+  opacity: 1;
 }
 
 .hero__title-line--accent {
-  background: var(--gradient-text);
+  background: linear-gradient(90deg, #6C63FF 0%, #FF6B9D 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  color: #6C63FF;
+}
+
+.hero__title-gradient {
+  background: linear-gradient(90deg, #6C63FF 0%, #FF6B9D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: #6C63FF;
+  display: inline-block;
 }
 
 /* Subtitle */

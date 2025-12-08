@@ -185,8 +185,8 @@ const Hero = () => {
             <span className="hero__title-line">
               {renderAnimatedText('Creative')}
             </span>
-            <span className="hero__title-line hero__title-line--accent">
-              {renderAnimatedText('Designer')}
+            <span className="hero__title-line">
+              <span className="hero__title-gradient">Designer</span>
             </span>
           </h1>
 
