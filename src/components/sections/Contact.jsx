@@ -45,12 +45,12 @@ const contactInfo = [
   }
 ];
 
-// Social links
+// Social links - open in new tab
 const socialLinks = [
-  { icon: <Instagram />, label: 'Instagram', href: '#' },
-  { icon: <Twitter />, label: 'Twitter', href: '#' },
-  { icon: <Linkedin />, label: 'LinkedIn', href: '#' },
-  { icon: <Dribbble />, label: 'Dribbble', href: '#' }
+  { icon: <Instagram />, label: 'Instagram', href: 'https://instagram.com' },
+  { icon: <Twitter />, label: 'Twitter', href: 'https://twitter.com' },
+  { icon: <Linkedin />, label: 'LinkedIn', href: 'https://linkedin.com' },
+  { icon: <Dribbble />, label: 'Dribbble', href: 'https://dribbble.com' }
 ];
 
 const Contact = () => {
@@ -268,6 +268,8 @@ const Contact = () => {
                     href={social.href}
                     className="contact__social-link"
                     aria-label={social.label}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {social.icon}
                   </a>
