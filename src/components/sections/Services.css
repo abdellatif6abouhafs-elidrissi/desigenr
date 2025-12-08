@@ -57,24 +57,26 @@
   perspective: 1000px;
 }
 
-/* Example Images Behind Card */
+/* Example Images Above Card */
 .services__examples {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left: 10%;
+  right: 10%;
+  bottom: 100%;
+  height: 200px;
   border-radius: var(--radius-xl);
   overflow: hidden;
   opacity: 0;
-  transform: translateY(20px) scale(0.95);
+  transform: translateY(50px);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 0;
+  z-index: 10;
+  pointer-events: none;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 }
 
 .services__examples.active {
   opacity: 1;
-  transform: translateY(-30px) scale(1.02);
+  transform: translateY(-15px);
 }
 
 .services__example-img {
@@ -101,8 +103,8 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(10, 10, 15, 0.3) 0%,
-    rgba(10, 10, 15, 0.8) 100%
+    transparent 0%,
+    rgba(10, 10, 15, 0.3) 100%
   );
 }
 
