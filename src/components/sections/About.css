@@ -398,6 +398,36 @@
 }
 
 @media (max-width: 640px) {
+  .about__image-container {
+    max-width: 100%;
+    padding: 0 var(--space-4);
+  }
+
+  .about__image-wrapper {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .about__slideshow {
+    aspect-ratio: 3/4;
+    min-height: 350px;
+  }
+
+  .about__slideshow-image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .about__image-decoration--1 {
+    top: 10px;
+    left: 10px;
+  }
+
+  .about__image-decoration--2 {
+    top: 20px;
+    left: 20px;
+  }
+
   .about__experience-badge {
     bottom: -20px;
     right: -10px;
@@ -406,5 +436,13 @@
 
   .about__experience-number {
     font-size: var(--text-2xl);
+  }
+
+  .about__heading {
+    font-size: var(--text-2xl);
+  }
+
+  .about__bio {
+    font-size: var(--text-base);
   }
 }
